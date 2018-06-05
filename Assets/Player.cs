@@ -9,12 +9,14 @@ public class Player : Singleton<Player> {
 	public bool duringUnmovableAction = false;
 	public AnimatorStateInfo stateInfo;
 
+	public int HP = 100;
 	public float speed;
 	public float walk_speed = 3.0f;
 	public float run_speed = 5.0f;
 
 	// Use this for initialization
 	void Start () {
+		HP = 100;
 		anima = GetComponent<Animator> ();
 		this.GetComponent<Rigidbody> ().isKinematic = false;
 	}
@@ -26,6 +28,8 @@ public class Player : Singleton<Player> {
 		if (!isAlive) {
 			anima.Play ("Death");
 			stateInfo = anima.GetCurrentAnimatorStateInfo (0);
+			if (stateInfo.normalizedTime > 1.0f)
+				this.GetComponent<CapsuleCollider> ().isTrigger = true;
 			return;
 		}
 		stateInfo = anima.GetCurrentAnimatorStateInfo (0);
@@ -95,7 +99,9 @@ public class Player : Singleton<Player> {
 	public void Restart(){
 		isAlive = true;
 		this.transform.position = new Vector3 (4.79f, 1, -3.98f);
+		this.GetComponent<CapsuleCollider> ().isTrigger = false;
 		Camera.main.transform.parent.position = this.transform.position;
 		Recurrent ();
+		this.GetComponent<HP> ().Restart ();
 	}
 }

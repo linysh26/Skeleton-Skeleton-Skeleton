@@ -42,13 +42,17 @@ public class GuardGeneral : Singleton<GuardGeneral>{
 			if (currentGuard != null)
 				currentGuard.removeTarget ();
 			currentGuard = guards [x, z];
-			currentGuard.setTarget (player.transform);
+			if (currentGuard.isAlive)
+				currentGuard.setTarget (player.transform);
+			else
+				currentGuard = null;
 		}
 		else if (currentGuard != null)
 			currentGuard.removeTarget ();
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
-				guards [i,j].Update ();
+				if(guards[i,j] != null)
+					guards [i,j].Update ();
 		
 	}
 
@@ -74,6 +78,11 @@ public class GuardGeneral : Singleton<GuardGeneral>{
 		currentGuard.removeTarget ();
 		Player.instance.Restart ();
 		ScoreController.instance.Restart ();
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++) {
+				guards [i, j].Restart ();
+				guards [i, j].gameObject.GetComponent<HP> ().Restart ();
+			}
 	}
 }
 

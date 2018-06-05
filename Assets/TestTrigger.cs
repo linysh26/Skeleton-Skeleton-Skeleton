@@ -19,6 +19,7 @@ public class TestTrigger : MonoBehaviour {
 			if (p.anima.GetCurrentAnimatorStateInfo (0).IsName ("SwingQuick")) {
 				GuardGeneral.Instance.currentGuard.anima.Play ("Damage");
 				ScoreController.Instance.addScore (5);
+				collider.GetComponent<Guard>().isAlive = collider.GetComponent<HP> ().getDamage ();
 			}
 		}
 	}

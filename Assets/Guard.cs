@@ -4,6 +4,8 @@ using System.Collections;
 public class Guard : MonoBehaviour {
 
 	public static float patrolSideLength = 10;
+	public int HP = 40;
+	public bool isAlive = true;
 
 	public Animator anima;
 	public AnimatorStateInfo stateInfo;
@@ -22,6 +24,15 @@ public class Guard : MonoBehaviour {
 	// Update is called once per frame
 	public void Update () {
 		stateInfo = anima.GetCurrentAnimatorStateInfo (0);
+		if (!isAlive) {
+			anima.Play ("Death");
+			stateInfo = anima.GetCurrentAnimatorStateInfo (0);
+			if (stateInfo.normalizedTime > 1.0f) {
+				this.GetComponent<CapsuleCollider> ().isTrigger = true;
+				//this.gameObject.SetActive (false);
+			}
+			return;
+		}
 		if (stateInfo.IsName ("Attack") || stateInfo.IsName("Damage"))
 			return;
 		else if (target != null) {
@@ -79,5 +90,11 @@ public class Guard : MonoBehaviour {
 		float div_x = pos.x - this.transform.position.x;
 		float div_z = pos.z - this.transform.position.z;
 		return Mathf.Abs(Mathf.Sqrt(div_x * div_x + div_z * div_z));
+	}
+
+	public void Restart(){
+		this.GetComponent<CapsuleCollider> ().isTrigger = false;
+		this.gameObject.SetActive (true);
+		isAlive = true;
 	}
 }
